@@ -1,0 +1,14 @@
+[build-system]
+requires = ["flit"]
+build-backend = "flit.buildapi"
+
+[tool.flit.metadata]
+module = "flit_bumpversion"
+author = "Niels Lemmens"
+author-email = "draso.odin@gmail.com"
+classifiers = ["License :: OSI Approved :: MIT License"]
+requires = ["sh"]
+requires-python = ">=3.7"
+
+[tool.flit.scripts]
+flit-bumpversion = "flit_bumpversion.__main__:cli"
