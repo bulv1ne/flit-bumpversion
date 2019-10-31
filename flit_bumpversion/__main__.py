@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 import argparse
 import re
+import subprocess
+import sys
 from pathlib import Path
-
-import sh
 
 
 def file_path(value):
@@ -51,12 +51,25 @@ def cli():
     args.base_file.write_text(new_file_text)
 
     try:
-        sh.git.commit(
-            p=True, m=f"Bump version from v{old_version} to v{version}", _fg=True
+        sh(
+            "git",
+            "commit",
+            "-p",
+            "-m",
+            f"Bump version from v{old_version} to v{version}",
         )
-    except sh.ErrorReturnCode_1:
+    except subprocess.CalledProcessError:
+        print("Aborted!")
         return
-    sh.git.tag(f"v{version}")
+    sh("git", "tag", f"v{version}")
+
+
+def sh(*args, **kwargs):
+    kwargs.setdefault("stdin", sys.stdin)
+    kwargs.setdefault("stdout", sys.stdout)
+    kwargs.setdefault("stderr", sys.stderr)
+    kwargs.setdefault("check", True)
+    return subprocess.run(args, **kwargs)
 
 
 if __name__ == "__main__":
