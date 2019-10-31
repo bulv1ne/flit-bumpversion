@@ -5,6 +5,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+from . import __version__
+
 
 def file_path(value):
     p = Path(value)
@@ -19,6 +21,9 @@ def cli():
     parser = argparse.ArgumentParser(prog="flit-bumpversion")
     parser.add_argument("version_part", choices=["major", "minor", "patch"])
     parser.add_argument("base_file", type=file_path)
+    parser.add_argument(
+        "--version", action="version", version=f"%(prog)s {__version__}"
+    )
     args = parser.parse_args()
     re_version = re.compile(
         r"__version__\s*=\s*(?P<quote>\"|')(?P<version>\d+\.\d+(\.\d+)?)(\"|')"
