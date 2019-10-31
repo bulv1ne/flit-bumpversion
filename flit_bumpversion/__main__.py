@@ -32,7 +32,7 @@ def cli():
     match = re_version.search(file_text)
     if not match:
         print(f"Couldn't find __version__ in {args.base_file}")
-        return
+        sys.exit(1)
 
     quote = match.group("quote")
     old_version = match.group("version")
@@ -65,7 +65,7 @@ def cli():
         )
     except subprocess.CalledProcessError:
         print("Aborted!")
-        return
+        sys.exit(1)
     sh("git", "tag", f"v{version}")
 
 
