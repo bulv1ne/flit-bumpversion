@@ -5,7 +5,7 @@ import subprocess
 import sys
 
 from . import __version__
-from .utils import VersionPart, file_path, sh
+from .utils import VersionPart, file_path, increase_version_number, sh
 
 
 def cli():
@@ -29,21 +29,8 @@ def cli():
 
     quote = match.group("quote")
     old_version = match.group("version")
-    version = list(map(int, old_version.split(".")))
+    version = increase_version_number(old_version, args.version_part)
 
-    if len(version) == 2:
-        version.append(0)
-    if args.version_part is VersionPart.PATCH:
-        version[2] += 1
-    elif args.version_part is VersionPart.MINOR:
-        version[1] += 1
-        version[2] = 0
-    elif args.version_part is VersionPart.MAJOR:
-        version[0] += 1
-        version[1] = 0
-        version[2] = 0
-
-    version = ".".join(map(str, version))
     new_file_text = re_version.sub(f"__version__ = {quote}{version}{quote}", file_text)
 
     args.base_file.write_text(new_file_text)

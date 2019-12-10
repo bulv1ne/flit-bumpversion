@@ -13,6 +13,25 @@ class VersionPart(Enum):
         return self.value
 
 
+def increase_version_number(version_number: str, version_part: VersionPart) -> str:
+    version_split = list(map(int, version_number.split(".")))
+
+    if len(version_split) == 2:
+        version_split.append(0)
+
+    if version_part is VersionPart.PATCH:
+        version_split[2] += 1
+    elif version_part is VersionPart.MINOR:
+        version_split[1] += 1
+        version_split[2] = 0
+    elif version_part is VersionPart.MAJOR:
+        version_split[0] += 1
+        version_split[1] = 0
+        version_split[2] = 0
+
+    return ".".join(map(str, version_split))
+
+
 def file_path(value):
     p = Path(value)
     if p.is_dir():
