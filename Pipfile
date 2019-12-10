@@ -7,9 +7,3 @@ verify_ssl = true
 isort = "*"
 flake8 = "*"
 black = "==19.10b0"
-
-[packages]
-sh = "*"
-
-[requires]
-python_version = "3.7"
