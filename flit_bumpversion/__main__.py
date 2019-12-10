@@ -18,7 +18,11 @@ def cli():
     parser.add_argument(
         "--version", action="version", version=f"%(prog)s {__version__}"
     )
-    parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="don't change any files or execute any git commands, only show what would be done/changed",
+    )
 
     args = parser.parse_args()
     re_version = re.compile(
