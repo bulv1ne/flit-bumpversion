@@ -3,9 +3,19 @@ import argparse
 import re
 import subprocess
 import sys
+from enum import Enum
 from pathlib import Path
 
 from . import __version__
+
+
+class VersionPart(Enum):
+    MAJOR = "major"
+    MINOR = "minor"
+    PATCH = "patch"
+
+    def __str__(self):
+        return self.value
 
 
 def file_path(value):
@@ -19,7 +29,9 @@ def file_path(value):
 
 def cli():
     parser = argparse.ArgumentParser(prog="flit-bumpversion")
-    parser.add_argument("version_part", choices=["major", "minor", "patch"])
+    parser.add_argument(
+        "version_part", choices=list(VersionPart), type=VersionPart,
+    )
     parser.add_argument("base_file", type=file_path)
     parser.add_argument(
         "--version", action="version", version=f"%(prog)s {__version__}"
@@ -40,12 +52,12 @@ def cli():
 
     if len(version) == 2:
         version.append(0)
-    if args.version_part == "patch":
+    if args.version_part is VersionPart.PATCH:
         version[2] += 1
-    elif args.version_part == "minor":
+    elif args.version_part is VersionPart.MINOR:
         version[1] += 1
         version[2] = 0
-    elif args.version_part == "major":
+    elif args.version_part is VersionPart.MAJOR:
         version[0] += 1
         version[1] = 0
         version[2] = 0
