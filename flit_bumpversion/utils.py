@@ -47,3 +47,23 @@ def sh(*args, **kwargs):
     kwargs.setdefault("stderr", sys.stderr)
     kwargs.setdefault("check", True)
     return subprocess.run(args, **kwargs)
+
+
+def get_default_module_file() -> Path:
+    try:
+        import tomlkit
+    except ImportError:
+        print("Could not get default module because 'tomlkit' is not installed")
+        print("$ pip install tomlkit")
+        sys.exit(1)
+    pyproject = Path() / "pyproject.toml"
+    if not pyproject.exists():
+        print(f"Could not find pyproject.toml, looked at {pyproject}")
+        sys.exit(1)
+    data = tomlkit.parse(pyproject.read_text())
+    try:
+        module_name = data["tool"]["flit"]["metadata"]["module"]
+    except Exception:
+        print(f"Could not extract tool.flit.metadata.module from {pyproject}")
+        sys.exit(1)
+    return file_path(module_name)
