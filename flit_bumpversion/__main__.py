@@ -3,28 +3,9 @@ import argparse
 import re
 import subprocess
 import sys
-from enum import Enum
-from pathlib import Path
 
 from . import __version__
-
-
-class VersionPart(Enum):
-    MAJOR = "major"
-    MINOR = "minor"
-    PATCH = "patch"
-
-    def __str__(self):
-        return self.value
-
-
-def file_path(value):
-    p = Path(value)
-    if p.is_dir():
-        p /= "__init__.py"
-    if not p.exists():
-        raise ValueError(f"File {value} doesn't exist")
-    return p
+from .utils import VersionPart, file_path, sh
 
 
 def cli():
@@ -79,14 +60,6 @@ def cli():
         print("Aborted!")
         sys.exit(1)
     sh("git", "tag", f"v{version}")
-
-
-def sh(*args, **kwargs):
-    kwargs.setdefault("stdin", sys.stdin)
-    kwargs.setdefault("stdout", sys.stdout)
-    kwargs.setdefault("stderr", sys.stderr)
-    kwargs.setdefault("check", True)
-    return subprocess.run(args, **kwargs)
 
 
 if __name__ == "__main__":
