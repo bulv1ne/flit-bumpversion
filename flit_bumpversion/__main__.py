@@ -74,8 +74,8 @@ def cli():
 
 
 def execute_command(*args, dry_run):
-    args = [shlex.quote(part) for part in args]
-    print(" ".join(["$", *args]))
+    # args = [shlex.quote(part) for part in args]
+    print(" ".join(["$", *map(shlex.quote, args)]))
     if not dry_run:
         try:
             sh(*args)
